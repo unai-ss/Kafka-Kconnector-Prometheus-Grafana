@@ -21,6 +21,8 @@ MongoDB Kafka Connector Monitoring dashboard example
 - MongoDB Kafka Connector Performance Metrics.
 ![Grafana-MdbKCSink&Source](./grafana-MongoDBSinkSource.png)
 
+> This project uses code from other sources.
+
 ## 2. How to deploy...
 
 ![install](./install.png)
