@@ -2,15 +2,16 @@
 
 ![high level](./high_level.png)
 
-- Easy to build & destroy Kafka repro environment deployment.
-  - Build with docker container on localhost deployment.
-- MongoDB Kafka Connector repro deployment.
+-  MongoDB Kafka Connector & Kafka repro environment easy to build & destroy.
+   - Docker containers and Docker network isolated on localhost.
+
 - Visual monitoring system.
-  - Kafka broker dashboards.
-  - MongoDB Kafka Connector metrics on Kafka Connect dashoard.
-  - Monitoring System Database.
-- Communication with localhost TSE tool `mlaunch` for MongoDB databases repro.
-  - TCP/IP communication from docker container to localhost `mongod` service.
+  - Kafka broker Grafana dashboards.
+  - MongoDB Kafka Connector metrics on Kafka Connect Grafana dashboard.
+  - Monitoring database on Prometheus.
+
+- Communication between Docker and `mlaunch` repro tool.
+    - TCP/IP communication between a docker container to localhost MongoDB Replica Set or `mongod` service.
 
 **MongoDB Kafka Connector Monitoring dashboard examples:**
 
@@ -25,11 +26,11 @@
 - 16 Gb RAM.
 - Docker.
 - MongoDB TSE tool `mlaunch`.
-- modify `/etc/hosts` file.
+- modify the `/etc/hosts` file.
 
 > This project uses code from other sources.
 
-**END 1.Description**
+## **END 1. Description**
 
 ---------------------------------
 
