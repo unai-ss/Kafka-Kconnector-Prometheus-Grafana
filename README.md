@@ -55,7 +55,8 @@ mongo "mongodb://host.docker.internal:27017,host.docker.internal:27018,host.dock
 ### Docker.
 * deploy kafka
 ```
-cd folder
+git clone https://github.com/unai-ss/Kafka-Kconnector-Prometheus-Grafana.git
+cd <folder>
 docker-compose up -d
 ```
 * example output
