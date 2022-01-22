@@ -6,8 +6,8 @@
    - Docker containers and Docker network isolated on localhost.
 
 - Visual monitoring system.
-  - Kafka broker Grafana dashboards.
   - MongoDB Kafka Connector metrics on Kafka Connect Grafana dashboard.
+  - Kafka broker & Zookeeper Grafana dashboards.
   - Monitoring database on Prometheus.
 
 - Communication between Docker and `mlaunch` repro tool.
