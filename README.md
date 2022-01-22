@@ -1,4 +1,4 @@
-##  1. Concept
+##  1. Description
 
 ![high level](./high_level.png)
 
@@ -21,9 +21,15 @@
 - MongoDB Kafka Connector Performance Metrics.
 ![Grafana-MdbKCSink&Source](./grafana-MongoDBSinkSource.png)
 
+**Pre-requisites**
+- 16 Gb RAM.
+- Docker.
+- MongoDB TSE tool `mlaunch`.
+- modify `/etc/hosts` file.
+
 > This project uses code from other sources.
 
-**END 1.Concept**
+**END 1.Description**
 
 ---------------------------------
 
