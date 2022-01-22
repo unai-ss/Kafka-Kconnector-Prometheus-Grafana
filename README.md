@@ -1,4 +1,31 @@
-## MongoDB RS on localhost
+##  1. Concept
+
+![high level](./high_level.png)
+
+- Easy to build & destroy Kafka repro environment deployment.
+  - Build with docker container on localhost deployment.
+  - MongoDB Kafka Connector repro depoyment.
+- Visual monitoring system.
+  - Kafka broker dashboards.
+  - MongoDB Kafka Connector metrics on Kafka Connect dashoard.
+  - Monitoring System Database
+- Communication with localhost TSE tool mlaunch for MongoDB databases repro.
+  - TCP/IP communication from docker container to localhost.
+
+MongoDB Kafka Connector Monitoring dashboard example
+
+- MongoDB Kafka Connector System metrics.
+![Grafana](./grafana-kafkaConnector.png)
+- MongoDB Kafka Connector Status metrics and alerts.
+![Grafana-MdbKC](./grafana-MongodDB.png)
+- MongoDB Kafka Connector Performance Metrics.
+![Grafana-MdbKCSink&Source](./grafana-MongoDBSinkSource.png)
+
+## 2. How to deploy...
+
+![install](./install.png)
+
+### MongoDB RS on localhost
 
 If you deploy a MongoDB RS in the localhost perform the following action.
 
@@ -25,7 +52,7 @@ mongo "mongodb://host.docker.internal:27017,host.docker.internal:27018,host.dock
 cd folder
 docker-compose up -d
 ```
-* info
+* example output
 ```
 ~/Documents/kafkaRepro/ master* ❯ docker ps -a
 CONTAINER ID   IMAGE                             COMMAND                  CREATED              STATUS                        PORTS                              NAMES
@@ -38,24 +65,27 @@ b5094329565f   confluentinc/cp-server:5.5.0      "/etc/confluent/dock…"   Abou
 97fb7c166a97   confluentinc/cp-zookeeper:5.5.0   "/etc/confluent/dock…"   About a minute ago   Up About a minute             2181/tcp, 2888/tcp, 3888/tcp       zookeeper1
 ```
 
+### Kafka-Connect Connection example
+
 ```
-~/Documents/kafkaRepro/ master* ❯ docker exec -it connect curl -s "http://localhost:8083" | jq .                                    09:37:05 AM
+~/Documents/kafkaRepro/ master* ❯ docker exec -it kafka-connect curl -s "http://localhost:8083" | jq .                                    09:37:05 AM
 {
   "version": "7.0.0-ccs",
   "commit": "c6d7e3013b411760",
   "kafka_cluster_id": "rIGdWbSuQYyuPScFxskMiw"
 }
-~/Documents/kafkaRepro/ master* ❯ docker exec -it connect curl -s "http://localhost:8083/connectors" | jq .                         09:38:25 AM
+~/Documents/kafkaRepro/ master* ❯ docker exec -it kafka-connect curl -s "http://localhost:8083/connectors" | jq .                         09:38:25 AM
 []
 ~/Documents/kafkaRepro/ master* ❯
 ```
 
-## grafana
+## Monitoring System
 * user admin / pass admin
 * link [http://localhost:3000](http://localhost:3000)
 
-* Useful dashboard
- - Kafka Overview
+### dashboards
+ - Kafka-Connector Overview.
+ - Kafka Overview.
  - Zookeeper Overview.
 
 ## Example.
@@ -75,23 +105,23 @@ db.createCollection("Source")
 
 2.- Deploy Source Connector on connect docker container
 ```
-docker exec -it connect curl -X POST -H "Content-Type: application/json" --data '{ "name": "mongo-source-CDCTutorial-eventroundtrip", "config": { "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector", "connection.uri": "mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=replset", "database": "CDCTutorial", "collection": "Source"} }' http://localhost:8083/connectors -w "\n" | jq .
+docker exec -it kafka-connect curl -X POST -H "Content-Type: application/json" --data '{ "name": "mongo-source-CDCTutorial-eventroundtrip", "config": { "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector", "connection.uri": "mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=replset", "database": "CDCTutorial", "collection": "Source"} }' http://localhost:8083/connectors -w "\n" | jq .
 ```
 ```
-docker exec -it connect curl -X POST -H "Content-Type: application/json" --data '{ "name": "mongo-sink-CDCTutorial-eventroundtrip", "config": { "connector.class":"com.mongodb.kafka.connect.MongoSinkConnector", "tasks.max":"1", "topics":"CDCTutorial.Source", "change.data.capture.handler":"com.mongodb.kafka.connect.sink.cdc.mongodb.ChangeStreamHandler", "connection.uri":"mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=replset", "database":"CDCTutorial", "collection":"Destination"}}' http://localhost:8083/connectors -w "\n" | jq .
+docker exec -it kafka-connect curl -X POST -H "Content-Type: application/json" --data '{ "name": "mongo-sink-CDCTutorial-eventroundtrip", "config": { "connector.class":"com.mongodb.kafka.connect.MongoSinkConnector", "tasks.max":"1", "topics":"CDCTutorial.Source", "change.data.capture.handler":"com.mongodb.kafka.connect.sink.cdc.mongodb.ChangeStreamHandler", "connection.uri":"mongodb://host.docker.internal:27017,host.docker.internal:27018,host.docker.internal:27019/?replicaSet=replset", "database":"CDCTutorial", "collection":"Destination"}}' http://localhost:8083/connectors -w "\n" | jq .
 ```
 3.- Connectors Status and Info
 ```
-docker exec -it connect curl -s http://localhost:8083/connectors
-docker exec -it connect curl -s "http://localhost:8083/connectors?expand=info&expand=status" | jq '.[] | "\(.info.name) \(.status.connector.state) \(.status.tasks)"'
+docker exec -it kafka-connect curl -s http://localhost:8083/connectors
+docker exec -it kafka-connect curl -s "http://localhost:8083/connectors?expand=info&expand=status" | jq '.[] | "\(.info.name) \(.status.connector.state) \(.status.tasks)"'
 ```
 4.- Kafka list topics
 ```
-docker exec -it connect kafka-topics -bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091 --list
+docker exec -it kafka-connect kafka-topics -bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091 --list
 ```
 5.- Kafka Status
 ```
-docker exec -it connect kafka-console-consumer --topic CDCTutorial.Source --from-beginning --bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091
+docker exec -it kafka-connect kafka-console-consumer --topic CDCTutorial.Source --from-beginning --bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091
 ```
 6.- Changes on CDCTutorial.Source namespace
 ```bash
@@ -110,7 +140,23 @@ db.Source.insert({proclaim: "Hello World!"});
 ## Troubleshooting
 output A
 ```
-docker exec -it connect curl -s "http://localhost:8083/connectors" | jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:8083/connectors/"\{connector_name\}"/status" | jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")' | column -s : -t | sed 's/\"//g' | sort
+docker exec -it kafka-connect curl -s "http://localhost:8083/connectors" | jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:8083/connectors/"\{connector_name\}"/status" | jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")' | column -s : -t | sed 's/\"//g' | sort
 mongo-sink-CDCTutorial-eventroundtrip    |  RUNNING  |  RUNNING
 mongo-source-CDCTutorial-eventroundtrip  |  RUNNING  |  RUNNING
 ```
+
+
+## 3.- Info
+
+![low level](./low_level.png)
+
+### Tools
+
+- Kafka Deployment
+ - 3 Kafka Broker, 1 Zookeeper
+ - Kafka Connect including MongoDB Kafka Connector 1.6
+ - Monitoring System 
+   - Grafana
+     - Kafka Connector, Kafka Connect, Kafka, Zookeeper monitoring Graph templates
+   - Prometheus
+     - Monitoring DB
