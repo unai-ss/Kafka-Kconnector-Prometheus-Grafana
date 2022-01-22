@@ -23,6 +23,10 @@ MongoDB Kafka Connector Monitoring dashboard example
 
 > This project uses code from other sources.
 
+**END 1.Concept**
+
+---------------------------------
+
 ## 2. How to deploy...
 
 ![install](./install.png)
