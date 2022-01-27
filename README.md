@@ -2,35 +2,40 @@
 
 ![high level](./high_level.png)
 
--  MongoDB Kafka Connector & Kafka repro environment easy to build & destroy.
-   - Docker containers and Docker network isolated on localhost.
+-  [MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/) & Kafka repro environment easy to build & destroy.
+   - Docker  OS-level and network virtualization isolated from one another and bundle their own software on localhost.
 
-- Visual monitoring system.
-  - MongoDB Kafka Connector metrics on Kafka Connect Grafana dashboard.
+- Visual monitoring system 
+  The Monitoring expresses these logs visually, to make analyzing the system more straightforward providing the following monitoring:
+  - [MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/) metrics on Kafka Connect Grafana dashboard.
   - Kafka broker & Zookeeper Grafana dashboards.
   - Monitoring database on Prometheus.
 
 - Communication between Docker and `mlaunch` repro tool.
     - TCP/IP communication between a docker container to localhost MongoDB Replica Set or `mongod` service.
 
-**MongoDB Kafka Connector Monitoring dashboard examples:**
+**[MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/) Monitoring dashboard examples:**
 
-- MongoDB Kafka Connector System metrics.
+- [MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/) System metrics.
 ![Grafana](./grafana-kafkaConnector.png)
-- MongoDB Kafka Connector Status metrics and alerts.
+- [MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/) Status metrics and alerts.
 ![Grafana-MdbKC](./grafana-MongodDB.png)
-- MongoDB Kafka Connector Performance Metrics.
+- [MongoDB Kafka Connector](https://docs.mongodb.com/kafka-connector/current/) Performance Metrics.
 ![Grafana-MdbKCSink&Source](./grafana-MongoDBSinkSource.png)
+
+### Components
+
+- Grafana is open source analytics & monitoring solution for databases.
+- An open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
+- Docker is a set of products that use OS-level virtualization to deliver software in packages called containers.
+- Apache Kafka is a framework implementation of a software bus using stream-processing
+- MongoDB is a source-available cross-platform document-oriented database program
 
 **Pre-requisites**
 - 16 Gb RAM.
 - Docker.
 - MongoDB TSE tool `mlaunch`.
 - modify the `/etc/hosts` file.
-
-> This project uses code from other sources.
-
-## **END 1. Description**
 
 ---------------------------------
 
@@ -40,7 +45,7 @@
 
 ### MongoDB RS on localhost
 
-If you deploy a MongoDB RS in the localhost perform the following action.
+Deploy a MongoDB RS in the localhost perform the following action.
 
 - Add ``host.docker.internal`` FQDN to the /etc/hosts file. It will help us to reach to the localhost from the docker container.
 ```echo '127.0.0.1 host.docker.internal' | sudo tee -a /etc/hosts```
@@ -63,7 +68,7 @@ mongo "mongodb://host.docker.internal:27017,host.docker.internal:27018,host.dock
 * deploy kafka
 ```
 git clone https://github.com/unai-ss/Kafka-Kconnector-Prometheus-Grafana.git
-cd <folder>
+cd Kafka-Kconnector-Prometheus-Grafana
 docker-compose up -d
 ```
 * example output
@@ -147,7 +152,11 @@ use CDCTutorial
 db.Source.insert({proclaim: "Hello World!"});
 ```
 
-###Grafana
+### Grafana
+
+[http://localhost:3000/login]
+
+### Grafana
 
 [http://localhost:3000/login]
 
@@ -174,3 +183,8 @@ mongo-source-CDCTutorial-eventroundtrip  |  RUNNING  |  RUNNING
      - Kafka Connector, Kafka Connect, Kafka, Zookeeper monitoring Graph templates
    - Prometheus
      - Monitoring DB
+
+
+### Disclaimer
+
+> This project uses code from other sources.
