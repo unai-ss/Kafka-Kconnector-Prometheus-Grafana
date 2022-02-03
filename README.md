@@ -25,11 +25,11 @@
 
 ### Components
 
-- [Grafana]() is open source analytics & monitoring solution for databases.
-- [Prometheus]() is an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
-- [Docker]() is a set of products that use OS-level virtualization to deliver software in packages called containers.
-- [Apache Kafka]() is a framework implementation of a software bus using stream-processing
-- [MongoDB]() is a source-available cross-platform document-oriented database program
+- [Grafana](https://grafana.com/) is open source analytics & monitoring solution for databases.
+- [Prometheus](https://prometheus.io/) is an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
+- [Docker](https://www.docker.com/) is a set of products that use OS-level virtualization to deliver software in packages called containers.
+- [Apache Kafka](https://kafka.apache.org/) is a framework implementation of a software bus using stream-processing
+- [MongoDB](https://www.mongodb.com/) is a source-available cross-platform document-oriented database program
 
 **Pre-requisites**
 - 16 Gb RAM.
