@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_SERVERS: zookeeper1:2888:3888
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_OPTS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/zookeeper_config.yml"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/zookeeper_config.yml"
     volumes:
         - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
         - $PWD/volumes/zookeeper_config.yml:/tmp/zookeeper_config.yml
@@ -34,7 +34,7 @@ services:
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: kafka1
       KAFKA_BROKER_RACK: rack-0
-      KAFKA_OPTS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
     ports:
       - 9091:9091
     volumes:
@@ -58,7 +58,7 @@ services:
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: kafka2
       KAFKA_BROKER_RACK: rack-0
-      KAFKA_OPTS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
     ports:
       - 9092:9092
     volumes:
@@ -82,7 +82,7 @@ services:
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: kafka3
       KAFKA_BROKER_RACK: rack-0
-      KAFKA_OPTS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
     ports:
       - 9093:9093
     volumes:
@@ -148,7 +148,7 @@ services:
       CONNECT_AUTO_CREATE_TOPICS_ENABLE: "true"
       CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      KAFKA_OPTS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_connect.yml"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_connect.yml"
     volumes:
       - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
       - $PWD/volumes/kafka_connect.yml:/tmp/kafka_connect.yml

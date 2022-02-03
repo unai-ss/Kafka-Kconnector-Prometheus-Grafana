@@ -25,11 +25,11 @@
 
 ### Components
 
-- Grafana is open source analytics & monitoring solution for databases.
-- Prometheus is an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
-- Docker is a set of products that use OS-level virtualization to deliver software in packages called containers.
-- Apache Kafka is a framework implementation of a software bus using stream-processing
-- MongoDB is a source-available cross-platform document-oriented database program
+- [Grafana]() is open source analytics & monitoring solution for databases.
+- [Prometheus]() is an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
+- [Docker]() is a set of products that use OS-level virtualization to deliver software in packages called containers.
+- [Apache Kafka]() is a framework implementation of a software bus using stream-processing
+- [MongoDB]() is a source-available cross-platform document-oriented database program
 
 **Pre-requisites**
 - 16 Gb RAM.
@@ -139,8 +139,13 @@ docker exec -it kafka-connect curl -s "http://localhost:8083/connectors?expand=i
 docker exec -it kafka-connect kafka-topics -bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091 --list
 ```
 5.- Kafka Status
+* Read the Topic consumer
 ```
 docker exec -it kafka-connect kafka-console-consumer --topic CDCTutorial.Source --from-beginning --bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091
+```
+* Write on the Topic producer
+```
+docker exec kafka-connect kafka-console-producer -bootstrap-server=kafka2:19092,kafka3:19093,kafka1:19091 --topic mdbtsedb.source
 ```
 6.- Changes on CDCTutorial.Source namespace
 ```bash
@@ -156,9 +161,11 @@ db.Source.insert({proclaim: "Hello World!"});
 
 [http://localhost:3000/login]
 
-### Grafana
-
-[http://localhost:3000/login]
+### Prometheus
+* graph
+[http://localhost:9090/graph]
+* status prometheus endpoints
+[http://localhost:9090/targets]
 
 ## Troubleshooting
 output A

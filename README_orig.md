@@ -1,3 +1,4 @@
+# Source: https://github.com/sknop/kafka-docker-composer 
 # kafka-docker-composer
 Python script to generate a docker-compose.yaml file based on templates and parameters
 
