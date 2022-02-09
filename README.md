@@ -109,7 +109,7 @@ b5094329565f   confluentinc/cp-server:5.5.0      "/etc/confluent/dock…"   Abou
 
 ## Example.
 
-## MongoDB Kafka Connector tutorial.
+## MongoDB Kafka Connector "Hello World" test.
 
 Those are easy guidelines adapting the `Replicate Data with a Change Data Capture Handler` to the current infra.
 
