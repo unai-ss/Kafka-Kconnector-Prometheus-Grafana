@@ -156,6 +156,17 @@ mongo "mongodb://host.docker.internal:27017,host.docker.internal:27018,host.dock
 use CDCTutorial
 db.Source.insert({proclaim: "Hello World!"});
 ```
+## End to End example
+
+[PoC - End to End example](PoC-EndToEnd.md)
+
+Prerequisites to run the End to End example
+
+1.- [mgodatagen tool](https://github.com/feliixx/mgodatagen)
+
+2 .- [mdb-kafka-connector-cdc-sample github project](https://github.com/esdiegoer/mdb-kafka-connector-cdc-sample)
+
+## Monitoring System
 
 ### Grafana
 
