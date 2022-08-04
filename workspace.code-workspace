@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../mdb-kafka-connector-cdc-sample"
+		}
+	],
+	"settings": {}
+}

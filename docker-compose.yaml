@@ -14,9 +14,9 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
       EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/zookeeper_config.yml"
     volumes:
-        - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
-        - $PWD/volumes/zookeeper_config.yml:/tmp/zookeeper_config.yml
-        - $PWD/volumes/jline-2.12.1.jar:/usr/share/java/kafka/jline-2.12.1.jar
+      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/zookeeper_config.yml:/tmp/zookeeper_config.yml
+      - $PWD/volumes/jline-2.12.1.jar:/usr/share/java/kafka/jline-2.12.1.jar
   kafka1:
     image: confluentinc/cp-server:5.5.0
     hostname: kafka1
@@ -31,6 +31,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:19091, EXTERNAL://localhost:9091
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TIMEOUT_MS: 10000
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: kafka1
       KAFKA_BROKER_RACK: rack-0
@@ -40,7 +41,7 @@ services:
     volumes:
       - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
       - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
-  
+
   kafka2:
     image: confluentinc/cp-server:5.5.0
     hostname: kafka2
@@ -55,6 +56,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:19092, EXTERNAL://localhost:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TIMEOUT_MS: 10000
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: kafka2
       KAFKA_BROKER_RACK: rack-0
@@ -64,7 +66,7 @@ services:
     volumes:
       - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
       - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
-  
+
   kafka3:
     image: confluentinc/cp-server:5.5.0
     hostname: kafka3
@@ -79,6 +81,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:19093, EXTERNAL://localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TIMEOUT_MS: 154321
       KAFKA_JMX_PORT: 9999
       KAFKA_JMX_HOSTNAME: kafka3
       KAFKA_BROKER_RACK: rack-0
@@ -88,7 +91,6 @@ services:
     volumes:
       - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
       - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
-  
 
   prometheus:
     image: prom/prometheus
@@ -102,7 +104,7 @@ services:
       - $PWD/volumes/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
-  
+
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -113,7 +115,6 @@ services:
       - $PWD/volumes/dashboards:/var/lib/grafana/dashboards
     ports:
       - 3000:3000
-  
 
   kafka-connect:
     image: cdc-tutorial-connect-1.6.1:1.0
@@ -152,4 +153,3 @@ services:
     volumes:
       - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
       - $PWD/volumes/kafka_connect.yml:/tmp/kafka_connect.yml
-   

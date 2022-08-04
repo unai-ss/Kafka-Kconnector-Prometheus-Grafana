@@ -1,0 +1,4 @@
+{"_id": "625d44c1f3a7ab99d65725aa", "name": "manish", "location": "india", "updates": {"location": "india-kolkata"}
+
+
+db.getSiblingDB("mgodatagen_test").getCollection("test").insert({"_id": "625d44c1f3a7ab99d65725aa", "name": "manish", "location": "ivndia"})

@@ -40,3 +40,4 @@ class TestNextRack(TestYamlGenerator):
         rack = 1
         next = YamlGenerator.next_rack(rack,2)
         self.assertEqual(next, 0)
+docke

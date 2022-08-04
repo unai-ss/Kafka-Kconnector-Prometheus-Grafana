@@ -1,0 +1,10 @@
+{
+    "schema": {
+        "type": "string",
+        "optional": false
+    },
+    "payload": "{\"_id\": {\"_data\": \"826262B145000000012B022C0100296E5A1004AFA69F85C71E4161B1A21667CF1DE2E7463C5F6964003C363235643434633166336137616239396436353732356161000004\"}, \"operationType\": \"update\", \"clusterTime\": {\"$timestamp\": {\"t\": 1650635077, \"i\": 1}}, \"ns\": {\"db\": \"mgodatagen_test\", \"coll\": \"test\"}, \"documentKey\": {\"_id\": \"625d44c1f3a7ab99d65725aa\"}, \"updateDescription\": {\"updatedFields\": {\"location\": \"Kolkata-db\", \"name\": \"Manish-a\"}, \"removedFields\": [], \"truncatedArrays\": []}}"
+}
+
+"pipeline":"[{\"$match\":{\"operationType\":{\"$in\":[\"update\"]}}},{$project: {\"_id\":1 } }]"
+
