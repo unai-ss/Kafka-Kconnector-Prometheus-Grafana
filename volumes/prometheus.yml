@@ -38,3 +38,4 @@ scrape_configs:
     static_configs:
       - targets:
           - kafka-connect:8091
+

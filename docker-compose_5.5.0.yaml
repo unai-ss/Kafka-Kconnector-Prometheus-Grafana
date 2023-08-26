@@ -1,0 +1,155 @@
+---
+version: '3'
+services:
+  zookeeper1:
+    image: confluentinc/cp-zookeeper:5.5.0
+    hostname: zookeeper1
+    container_name: zookeeper1
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: "2000"
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: localhost
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/zookeeper_config.yml"
+    volumes:
+      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/zookeeper_config.yml:/tmp/zookeeper_config.yml
+      - $PWD/volumes/jline-2.12.1.jar:/usr/share/java/kafka/jline-2.12.1.jar
+  kafka1:
+    image: confluentinc/cp-server:5.5.0
+    hostname: kafka1
+    container_name: kafka1
+    depends_on:
+      - zookeeper1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
+      KAFKA_LISTENERS: PLAINTEXT://kafka1:19091, EXTERNAL://kafka1:9091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:19091, EXTERNAL://localhost:9091
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TIMEOUT_MS: 10000
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: kafka1
+      KAFKA_BROKER_RACK: rack-0
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
+    ports:
+      - 9091:9091
+    volumes:
+      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
+
+  kafka2:
+    image: confluentinc/cp-server:5.5.0
+    hostname: kafka2
+    container_name: kafka2
+    depends_on:
+      - zookeeper1
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
+      KAFKA_LISTENERS: PLAINTEXT://kafka2:19092, EXTERNAL://kafka2:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:19092, EXTERNAL://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TIMEOUT_MS: 10000
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: kafka2
+      KAFKA_BROKER_RACK: rack-0
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
+    ports:
+      - 9092:9092
+    volumes:
+      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
+
+  kafka3:
+    image: confluentinc/cp-server:5.5.0
+    hostname: kafka3
+    container_name: kafka3
+    depends_on:
+      - zookeeper1
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
+      KAFKA_LISTENERS: PLAINTEXT://kafka3:19093, EXTERNAL://kafka3:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:19093, EXTERNAL://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TIMEOUT_MS: 154321
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: kafka3
+      KAFKA_BROKER_RACK: rack-0
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_config.yml"
+    ports:
+      - 9093:9093
+    volumes:
+      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - kafka-connect
+    volumes:
+      - $PWD/volumes/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - $PWD/volumes/provisioning:/etc/grafana/provisioning
+      - $PWD/volumes/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - 3000:3000
+
+  kafka-connect:
+    image: cdc-tutorial-connect-1.6.1:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile-MongoConnect
+    hostname: kafka-connect
+    container_name: kafka-connect
+    depends_on:
+      - zookeeper1
+      - kafka1
+      - kafka2
+      - kafka3
+    ports:
+      - 8083:8083
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "kafka1:19091,kafka2:19092,kafka3:19093"
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: connect-cluster-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_ZOOKEEPER_CONNECT: "zookeeper1:2181"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+      CONNECT_AUTO_CREATE_TOPICS_ENABLE: "true"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_connect.yml"
+    volumes:
+      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/kafka_connect.yml:/tmp/kafka_connect.yml
