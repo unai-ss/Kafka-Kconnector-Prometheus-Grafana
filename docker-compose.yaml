@@ -2,7 +2,7 @@
 version: '3'
 services:
   zookeeper1:
-    image: confluentinc/cp-zookeeper:5.5.0
+    image: confluentinc/cp-zookeeper:7.2.6
     hostname: zookeeper1
     container_name: zookeeper1
     environment:
@@ -18,7 +18,7 @@ services:
       - $PWD/volumes/zookeeper_config.yml:/tmp/zookeeper_config.yml
       - $PWD/volumes/jline-2.12.1.jar:/usr/share/java/kafka/jline-2.12.1.jar
   kafka1:
-    image: confluentinc/cp-server:5.5.0
+    image: confluentinc/cp-server:7.2.6
     hostname: kafka1
     container_name: kafka1
     depends_on:
@@ -43,7 +43,7 @@ services:
       - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
 
   kafka2:
-    image: confluentinc/cp-server:5.5.0
+    image: confluentinc/cp-server:7.2.6
     hostname: kafka2
     container_name: kafka2
     depends_on:
@@ -68,7 +68,7 @@ services:
       - $PWD/volumes/kafka_config.yml:/tmp/kafka_config.yml
 
   kafka3:
-    image: confluentinc/cp-server:5.5.0
+    image: confluentinc/cp-server:7.2.6
     hostname: kafka3
     container_name: kafka3
     depends_on:
@@ -130,6 +130,7 @@ services:
       - kafka3
     ports:
       - 8083:8083
+      - 8091:8091
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -149,7 +150,35 @@ services:
       CONNECT_AUTO_CREATE_TOPICS_ENABLE: "true"
       CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.12.1.jar=8091:/tmp/kafka_connect.yml"
+      EXTRA_ARGS: "-javaagent:/tmp/jmx_prometheus_javaagent-0.19.0.jar=8091:/tmp/config.yml"
+      #CONNECT_LOG4J_LOGGERS: org.apache.kafka.connect=DEBUG
+      #CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect=DEBUG"
+      #CONNECT_LOG4J_ROOT_LOGLEVEL: "TRACE"
+      CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.WorkerSourceTask=TRACE,org.apache.kafka.connect=TRACE"
+      #CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=DEBUG,org.reflections=ERROR,org.apache.kafka.connect.runtime.WorkerSourceTask=DEBUG,org.apache.kafka.connect=DEBUG"
     volumes:
-      - $PWD/volumes/jmx_prometheus_javaagent-0.12.1.jar:/tmp/jmx_prometheus_javaagent-0.12.1.jar
+      - $PWD/volumes/jmx_prometheus_javaagent-0.19.0.jar:/tmp/jmx_prometheus_javaagent-0.19.0.jar
       - $PWD/volumes/kafka_connect.yml:/tmp/kafka_connect.yml
+      - $PWD/volumes/config.yml:/tmp/config.yml
+      - $PWD/volumes/mongo-kafka-connect-1.11.0-all.jar:/usr/share/confluent-hub-components/mongo-kafka-connect-1.11.0-all.jar
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.2.6
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka1:19091,kafka2:19092,kafka3:19093'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+
+      
