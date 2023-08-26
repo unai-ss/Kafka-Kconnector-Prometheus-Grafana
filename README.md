@@ -1,3 +1,10 @@
+## Recently upgrades `Sept 2023`
+
+- Confluent release 7.2.6
+- Added schema-registry container
+- Added log4j config on kafka-connect
+- Modified prometheus yaml to capture com.mongodb.* among other JMX(jmx_prometheus_javaagent-0.19.0 kafka-connect:8091)
+
 ##  1. Description
 
 ![high level](./high_level.png)
