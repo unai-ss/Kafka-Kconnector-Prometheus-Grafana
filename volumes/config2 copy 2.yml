@@ -1,0 +1,13 @@
+whitelistObjectNames:
+  - kafka.connect:type=connect-worker-metrics
+  - kafka.connect:type=connect-metrics,client-id=*
+  - kafka.connect:type=connector-task-metrics,connector=*,task=*
+  - kafka.connect:type=source-task-metrics,connector=*,task=*
+  - kafka.connect:type=sink-task-metrics,connector=*,task=*
+  - kafka.connect:type=task-error-metrics,connector=*,task=*
+  - com.mongodb.kafka.connect:type=source-task-metrics,task=*
+rules:
+  - name: "cp_kafka_mongodb_metrics_$3"
+    pattern: "com.mongodb.kafka.connect<type=([^:]+), task=([^:]+)><>([^:]+)"
+    labels:
+      task: $2

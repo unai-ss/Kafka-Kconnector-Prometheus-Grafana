@@ -1,0 +1,28 @@
+startDelaySeconds: 0
+ssl: false
+lowercaseOutputName: false
+lowercaseOutputLabelNames: false
+rules:
+- pattern: "com.mongodb.kafka.connect<type=([^:]+), task=([^:]+)><>([^:]+)"
+  name: "mdb_ksoc_mongodb_metrics_$3"
+  labels:
+    task: "$3"
+
+
+startDelaySeconds: 0
+ssl: false
+lowercaseOutputName: false
+lowercaseOutputLabelNames: false
+rules:
+- pattern: "com.mongodb.kafka.connect<type=([^:]+), task=([^:]+)><>([^:]+)"
+  name: "mdb_ksoc_mongodb_metrics_$1_$2_$3"
+  labels:
+    task: "$3"
+    type: "$2"
+
+
+    mdb_ksoc_mongodb_metrics_
+    $1 source_task_metrics_connector_
+    $2 mdb_kafka_connector_cdc_sample_source_source_
+    $3 task_0
+    _records{task="records",type="source-task-0",} 1.0

@@ -5,6 +5,17 @@
 - Added log4j config on kafka-connect
 - Modified prometheus yaml to capture com.mongodb.* among other JMX(jmx_prometheus_javaagent-0.19.0 kafka-connect:8091)
 
+## todo
+
+- Explain how to debug kafka-connect.
+````
+#CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect=DEBUG"
+#CONNECT_LOG4J_ROOT_LOGLEVEL: "TRACE"
+CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.WorkerSourceTask=TRACE,org.apache.kafka.connect=TRACE"
+#CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=DEBUG,org.reflections=ERROR,org.apache.kafka.connect.runtime.WorkerSourceTask=DEBUG,org.apache.kafka.connect=DEBUG"
+````
+
 ##  1. Description
 
 ![high level](./high_level.png)
